@@ -127,4 +127,5 @@ See `LICENSE` for details.
 ---
 
 **Designed to slow you down — on purpose.**
+
 — **waleedahmedja**
