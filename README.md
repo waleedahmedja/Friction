@@ -1,131 +1,96 @@
-# Friction
+# 🧠 Friction
 
-**Effort over enforcement.**
+**Friction** is a minimal focus-lock app built around one idea:
 
-Friction is a lightweight, offline Android app that helps reduce screen time — not by force, but by effort.
+> If breaking focus is easy, focus never stands a chance.
 
-It doesn’t block your phone.
-It doesn’t lock you out.
-It doesn’t fight your operating system.
+Instead of just blocking apps or showing a timer, Friction introduces *deliberate resistance*.
+You can exit early — but only if you’re willing to slow down, reflect, and make that choice consciously.
 
-Instead, it introduces *just enough resistance* to make you pause.
-
----
-
-## Why Friction?
-
-Most screen-time apps rely on control:
-- Hard locks
-- App blocking
-- Heavy permissions
-- Background services
-
-They work… until the moment you really want to bypass them.
-
-Friction works differently.
-
-It assumes one thing:
-> If you still want to exit, you should be able to —  
-> but not without *feeling* the decision.
+This app is not about punishment.
+It’s about **intentional friction**.
 
 ---
 
-## How It Works
+## ✨ Philosophy
 
-1. You choose a duration using a scroll-wheel time picker
-2. Friction enters a full-screen focus mode
-3. To exit early, you must complete a tap challenge
-4. Reflective messages appear as you tap
-5. The lock ends naturally when time completes
+Most productivity tools optimize for speed.
 
-No tracking.  
-No accounts.  
-No internet.
+Friction does the opposite.
 
-Just friction.
+* Slows impulsive exits
+* Forces awareness before breaking focus
+* Makes quitting *a decision*, not a reflex
 
----
-
-## What Friction Is NOT
-
-- ❌ Not a phone-locking app
-- ❌ Not parental control
-- ❌ Not a system-level blocker
-- ❌ Not enforcement-based productivity
-
-If the app is closed, the lock is gone — and that’s intentional.
+The goal isn’t to trap the user.
+The goal is to **interrupt autopilot**.
 
 ---
 
-## Philosophy
+## 🎯 Core Ideas
 
-Friction doesn’t remove choice.
+* **Time Lock**
+  Lock your session for a chosen duration.
 
-It slows impulse.
+* **Tap Challenge**
+  Exiting early requires sustained, intentional interaction — no accidental escapes.
 
-It’s designed to help you notice *why* you’re reaching for your phone — not punish you for it.
+* **Reflective Messaging**
+  Before returning home, the app pauses and asks you *why* you’re breaking the lock.
 
-Discipline built this way tends to last longer.
-
----
-
-## Features
-
-- 🎰 Scroll-wheel time picker (hours & minutes)
-- 🔒 Full-screen focus mode
-- 👆 Tap-to-exit challenge (resets daily)
-- 🧠 Reflective, non-judgmental messages
-- ⚡ Offline & lightweight
-- 🎨 Minimal, calm UI
+* **Minimal UI**
+  No dopamine. No noise. Just space.
 
 ---
 
-## Technical Overview
+## 🧩 Design Principles
 
-- **Language:** Python
-- **Framework:** Kivy
-- **Platform:** Android (APK)
-- **Permissions:** None
-- **Architecture:** Modular, state-driven
-- **Timers:** Kivy Clock (no background services)
+* Soft, rounded UI — calm, not harsh
+* Centered layouts — visual balance over symmetry
+* Delayed transitions — intentional pacing
+* Subtle animations — feedback without distraction
 
-The app is intentionally simple to ensure reliability.
+Everything is designed to feel *considered*, not rushed.
 
 ---
 
-## Status
+## 🛠 Tech Stack
 
-This is an early, stable MVP.
+* Python
+* Kivy / KivyMD
+* Android (via Buildozer)
 
-UI/UX polish, accessibility improvements, and design refinements are welcome.
-
----
-
-## Open Source & Collaboration
-
-Friction is open-source because self-control tools should be transparent.
-
-If you’re interested in:
-- UI/UX design
-- Behavioral feedback
-- Calm interaction design
-
-You’re welcome to contribute.
+Built with simplicity and control in mind.
 
 ---
 
-## License
+## 🚧 Status
 
-Friction is released under a custom open license:
-- Free to use
-- Free to modify
-- Attribution required
-- Original creator retains core rights
+Friction is an evolving experiment.
 
-See `LICENSE` for details.
+This repository represents:
+
+* A working prototype
+* Ongoing UI/UX iteration
+* Continuous behavioral tuning
+
+Feedback, forks, and thoughtful critique are welcome.
 
 ---
 
-**Designed to slow you down — on purpose.**
+## 📌 Why “Friction”?
 
-— **waleedahmedja**
+Because discipline doesn’t come from force.
+
+It comes from **pauses**.
+
+And sometimes, the smallest resistance changes everything.
+
+---
+
+<footer>
+
+**waleedahmedja**
+
+</footer>
+
