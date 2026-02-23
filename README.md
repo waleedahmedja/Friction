@@ -55,25 +55,9 @@ Friction makes quitting harder than continuing.
 
 ---
 
-## 📸 Screenshots
-
-
-![Home](https://github.com/waleedahmedja/Friction/blob/main/screenshots/HomeScreen.jpg)
-![StandbyScreen](https://github.com/waleedahmedja/Friction/blob/main/screenshots/StandbyScreen.jpg)
-![TapChallenge](https://github.com/waleedahmedja/Friction/blob/main/screenshots/TapChallengeScreen.jpg)
-
-
----
-
 ## 🚀 Installation
 
-Clone the repo:
-
-```
-git clone https://github.com/YOUR_USERNAME/friction.git
-```
-
-Open in Android Studio and run.
+Check out Releases:
 
 ---
 
