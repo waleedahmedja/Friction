@@ -58,9 +58,9 @@ Friction makes quitting harder than continuing.
 ## 📸 Screenshots
 
 ```
-![Home](screenshots/HomeScreen.jpg)
-![Standby Screen](screenshots/StandbyScreen.jpg)
-![Tap Challenge](screenshots//TapChallengeScreen.jpg)
+![Home]([screenshots/HomeScreen.jpg](https://github.com/waleedahmedja/Friction/blob/main/screenshots/HomeScreen.jpg))
+![Standby Screen]([screenshots/StandbyScreen.jpg](https://github.com/waleedahmedja/Friction/blob/main/screenshots/StandbyScreen.jpg))
+![Tap Challenge]([screenshots//TapChallengeScreen.jpg](https://github.com/waleedahmedja/Friction/blob/main/screenshots/TapChallengeScreen.jpg))
 ```
 
 ---
