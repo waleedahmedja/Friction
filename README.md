@@ -58,7 +58,8 @@ Friction makes quitting harder than continuing.
 ## 🚀 Installation
 
 Check out Releases:
-
+  https://github.com/waleedahmedja/Friction/releases/tag/v1.0
+  
 ---
 
 ## 📄 License
