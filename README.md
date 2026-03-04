@@ -1,11 +1,12 @@
+
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.0-blue)
 ![Compose](https://img.shields.io/badge/Jetpack%20Compose-UI-green)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 # FRICTION
 
-Minimalist focus timer built with Jetpack Compose.  
-Designed to add just enough resistance between you and distraction.
+A commitment-enforcement focus system built with Jetpack Compose.
+Designed to introduce intentional resistance between impulse and action.
 
 ---
 
@@ -13,53 +14,132 @@ Designed to add just enough resistance between you and distraction.
 
 Most productivity apps try to motivate you.
 
-Friction does the opposite.
+Friction enforces discipline.
 
-It adds intentional effort between you and quitting.
+It does not reward.
+It does not gamify.
+It does not persuade.
 
-The result?
-You think twice before breaking focus.
+It adds deliberate effort between you and distraction.
 
----
-
-## 📱 Features
-
-- Infinite smooth wheel time picker
-- Real-time dynamic time preview
-- Persistent lock sessions (DataStore)
-- Tap-based early-exit friction system
-- Reflection messages after sessions
-- Minimal, distraction-free UI
-- Fully built in Jetpack Compose
+Quitting should require intention.
 
 ---
 
-## 🧠 How It Works
+## 🧠 What Makes V2 Different
+
+Friction evolves the original system into a serious commitment tool.
+
+It introduces:
+
+• Controlled app blocking
+• Hard Commitment mode (session-based Device Admin)
+• System-integrated light & dark theme
+• OLED-safe standby design
+• Polished Apple-level minimal UI
+
+This is not a productivity tracker.
+It is a discipline mechanism.
+
+---
+
+## 📱 Core Features
+
+* Infinite smooth focus duration wheel
+* Persistent focus sessions (DataStore-backed)
+* App blocking via Accessibility Service
+* TapChallenge enforcement before early exit
+* Reflection screen when breaking a session
+* Completion screen on natural finish
+* Normal & Hard Commitment modes
+* Device Admin activated only during session (Play Store safe)
+* Pixel burn prevention (micro UI drift)
+* Fully built with Jetpack Compose
+
+---
+
+## 🔒 How It Works
 
 1. Set your focus duration.
-2. Lock the session.
-3. To exit early, complete a resistance tap challenge.
-4. Finish → receive a reflection message.
+2. Start a session.
+3. Blocked apps trigger TapChallenge.
+4. Pass → session ends intentionally.
+5. Fail → returned to lock screen.
+6. Timer completes → session ends cleanly.
 
-Friction makes quitting harder than continuing.
+Friction ensures quitting is harder than continuing.
+
+---
+
+## 🎨 Design Principles
+
+* Minimal
+* Spacious
+* Serious
+* System-native
+* No visual noise
+* No dopamine tricks
+
+Light and Dark mode automatically follow device settings.
+
+The interface is inspired by the restraint and clarity of modern system apps.
+
+---
+
+## ⚙ Modes
+
+### Normal Mode
+
+Accessibility-based enforcement.
+
+### Hard Commitment Mode
+
+* Activates Device Admin during session
+* Prevents uninstall during session
+* Prevents disabling enforcement mid-session
+* Automatically releases when session completes
+
+Outside a session → full user control restored.
 
 ---
 
 ## 🛠 Built With
 
-- Kotlin
-- Jetpack Compose
-- StateFlow
-- Android DataStore
-- MVVM Architecture
+* Kotlin
+* Jetpack Compose
+* Material 3 (custom restrained styling)
+* StateFlow
+* Android DataStore
+* Accessibility Service
+* Device Admin API
+* MVVM Architecture
+
+---
+
+## 🏗 Architecture
+
+Friction follows clean architecture principles:
+
+* UI Layer — Jetpack Compose
+* Domain Logic — Session Engine
+* State Management — StateFlow
+* Data Layer — DataStore
+* Enforcement Layer — Accessibility + Device Admin
+* Navigation — Compose Navigation
+
+Sessions persist across app restarts.
+Enforcement resumes automatically if interrupted.
 
 ---
 
 ## 🚀 Installation
 
-Check out Releases:
-  https://github.com/waleedahmedja/Friction/releases/tag/v1.0
-  
+Check Releases:
+
+[https://github.com/waleedahmedja/Friction/releases/tag/v2.0.0](https://github.com/waleedahmedja/Friction/releases/tag/v2.0.0)
+
+Or clone the repository and build locally.
+
 ---
 
 ## 📄 License
@@ -69,15 +149,21 @@ See the LICENSE file for details.
 
 ---
 
-## 🏗 Architecture
+## 🧭 Roadmap
 
-Friction follows a clean MVVM architecture:
-
-- UI Layer (Jetpack Compose)
-- State Management (StateFlow)
-- Data Layer (DataStore)
-- Navigation Layer (Compose Navigation)
+* Biometric exit verification
+* Adaptive TapChallenge difficulty
+* Enhanced reflection insights
+* Performance refinements
+* Play Store deployment hardening
 
 ---
-  
-> waleedahmedja
+
+> Friction is calm.
+> Friction is firm.
+> Friction respects your decision to focus.
+
+— waleedahmedja
+
+
+
