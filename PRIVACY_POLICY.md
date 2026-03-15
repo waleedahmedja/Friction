@@ -107,7 +107,6 @@ This policy may be updated to reflect new features or legal requirements. The "L
 ## 10. Contact
 
 **waleedahmedja**
-Email: waleedahmedja@gmail.com
 GitHub: https://github.com/waleedahmedja/Friction
 
 ---
