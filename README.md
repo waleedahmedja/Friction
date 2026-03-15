@@ -58,7 +58,7 @@ Set duration → Lock session → Session active
                           Try to open blocked app?
                                     │
                           ┌─────────┴──────────┐
-                          │  Tap Challenge gate │
+                          │ Tap Challenge gate │
                           └─────────┬──────────┘
                                     │
                      Complete it → Session ends intentionally
