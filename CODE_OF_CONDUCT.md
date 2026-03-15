@@ -33,7 +33,23 @@ This applies to all project spaces: GitHub issues, pull requests, discussions, a
 
 ## Enforcement
 
-Violations can be reported to **waleedahmedja@gmail.com**. All reports are handled confidentially.
+Violations of this Code of Conduct may result in:
+
+1. A private or public warning
+2. Temporary suspension from contributing
+3. Permanent ban from the project
+
+The project maintainer (waleedahmedja) has final authority on enforcement decisions.
+
+---
+
+## Reporting
+
+If you experience or witness behavior that violates this Code of Conduct, please report it by opening a private GitHub Issue or contacting the maintainer directly.
+
+All reports will be handled with discretion and confidentiality.
+
+---
 
 **Escalation:**
 1. **Correction** — private note explaining the issue
@@ -43,4 +59,4 @@ Violations can be reported to **waleedahmedja@gmail.com**. All reports are handl
 
 ---
 
-*Adapted from Contributor Covenant v2.0 — https://www.contributor-covenant.org*
+— **waleedahmedja**
