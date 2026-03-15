@@ -106,9 +106,8 @@ This policy may be updated to reflect new features or legal requirements. The "L
 
 ## 10. Contact
 
-**waleedahmedja**
-
-GitHub: https://github.com/waleedahmedja/Friction
+If you have questions about this policy, open a GitHub Issue at:
+https://github.com/waleedahmedja/Score247
 
 ---
 
