@@ -107,6 +107,7 @@ This policy may be updated to reflect new features or legal requirements. The "L
 ## 10. Contact
 
 **waleedahmedja**
+
 GitHub: https://github.com/waleedahmedja/Friction
 
 ---
