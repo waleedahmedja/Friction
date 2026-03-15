@@ -1,18 +1,14 @@
 <div align="center">
 
-<br/>
-
-```
-F R I C T I O N
-```
+# F R I C T I O N
 
 **A commitment-enforcement focus system for Android.**
 Built with Jetpack Compose. Designed to make distraction require effort.
 
 <br/>
 
-![Kotlin](https://img.shields.io/badge/Kotlin-2.0.21-7F52FF?style=flat-square&logo=kotlin&logoColor=white)
-![Compose](https://img.shields.io/badge/Jetpack_Compose-2024.12-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.0.21-7F52FF?style=flat-square&logo=kotlin&logoColor=white)](https://kotlinlang.org)
+[![Compose](https://img.shields.io/badge/Jetpack_Compose-2024.12-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white)](https://developer.android.com/jetpack/compose)
 ![API](https://img.shields.io/badge/Min_SDK-24-green?style=flat-square)
 ![License](https://img.shields.io/badge/License-Friction_v1.0-FFD60A?style=flat-square)
 ![Status](https://img.shields.io/badge/Status-V2_Active-brightgreen?style=flat-square)
