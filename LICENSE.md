@@ -31,6 +31,8 @@ This Software may not be used for:
 
 ---
 
+— **waleedahmedja**
+
 ### Summary (Non-Legally Binding)
 
 > 🟢 **You are free to:** Use Friction and improve it.  
