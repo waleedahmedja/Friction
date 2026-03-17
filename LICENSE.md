@@ -31,11 +31,11 @@ This Software may not be used for:
 
 ---
 
-— **waleedahmedja**
-
 ### Summary (Non-Legally Binding)
 
 > 🟢 **You are free to:** Use Friction and improve it.  
 > ✍️ **You must:** Credit the original author.  
 > 🌐 **Publicity:** Public changes should stay public.  
 > 🛡️ **Stewardship:** The original creator remains the steward of the project.
+
+— **waleedahmedja**
