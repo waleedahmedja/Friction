@@ -1,8 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        IMPORTANT: Parent is Theme.AppCompat.NoActionBar — NOT Theme.Material3.
+        Using Material3 as the Activity theme parent causes an AAPT resource-not-found
+        crash on many AGP + device combinations. Compose draws its own Material3
+        theme in code via MaterialTheme{} — the Activity window theme only controls
+        the window chrome (background color, status bar, splash screen).
+    -->
     <style name="Theme.Friction" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">#000000</item>
-        <item name="android:statusBarColor">#000000</item>
-        <item name="android:navigationBarColor">#000000</item>
+
+        <!-- Pure OLED black — eliminates white flash on cold launch -->
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
+
+        <!-- Edge-to-edge: Compose owns the insets, not the Activity window -->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+
+        <!-- Remove OS contrast enforcement so nav/status bars go fully transparent -->
+        <item name="android:enforceStatusBarContrast"
+            tools:targetApi="q">false</item>
+        <item name="android:enforceNavigationBarContrast"
+            tools:targetApi="q">false</item>
+
+        <!-- Android 12+ splash screen — black background, centered app icon -->
+        <item name="android:windowSplashScreenBackground"
+            tools:targetApi="s">@android:color/black</item>
+        <item name="android:windowSplashScreenAnimatedIcon"
+            tools:targetApi="s">@mipmap/ic_launcher</item>
+        <item name="android:windowSplashScreenIconBackgroundColor"
+            tools:targetApi="s">@android:color/transparent</item>
+
     </style>
+
+    <!--
+        Overlay theme for TapChallengeOverlayActivity.
+        Instant appearance — no animation, no translucency — so it fully
+        covers the blocked app before the user can interact with it.
+    -->
+    <style name="Theme.Friction.Overlay" parent="Theme.Friction">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowSoftInputMode">adjustNothing</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
 </resources>

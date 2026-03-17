@@ -1,10 +1,12 @@
--keepclassmembers class * extends androidx.datastore.preferences.core.Preferences$Key { *; }
--keep class com.waleedahmedja.friction.viewmodel.** { *; }
--keep class com.waleedahmedja.friction.viewmodel.LockState { *; }
--keep class com.waleedahmedja.friction.viewmodel.TapState { *; }
--keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
--keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
--assumenosideeffects class android.util.Log {
-    public static int d(...);
-    public static int v(...);
-}
+# Friction — ProGuard rules
+# The default proguard-android-optimize.txt handles most cases.
+# Add project-specific rules here if needed.
+
+# Keep BiometricPrompt callback
+-keep class androidx.biometric.** { *; }
+
+# Keep Device Admin receiver
+-keep class com.waleedahmedja.friction.admin.** { *; }
+
+# Keep Accessibility Service
+-keep class com.waleedahmedja.friction.service.** { *; }

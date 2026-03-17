@@ -1,3 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Friction</string>
+    <string name="accessibility_label">Friction Focus</string>
+    <string name="accessibility_description">Friction monitors which app is in the foreground to enforce your focus session. No screen content is read or transmitted.</string>
+    <string name="admin_label">Friction Focus – Hard Mode</string>
+    <string name="admin_description">Prevents uninstalling Friction during an active Hard Commitment session. Admin rights are removed automatically when your session ends.</string>
 </resources>
