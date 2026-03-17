@@ -1,149 +1,141 @@
 package com.waleedahmedja.friction
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.waleedahmedja.friction.navigation.Screen
-import com.waleedahmedja.friction.ui.screens.CompletionScreen
-import com.waleedahmedja.friction.ui.screens.HomeScreen
-import com.waleedahmedja.friction.ui.screens.LockScreen
-import com.waleedahmedja.friction.ui.screens.ReflectionScreen
-import com.waleedahmedja.friction.ui.screens.TapChallengeScreen
-import com.waleedahmedja.friction.ui.theme.Black
-import com.waleedahmedja.friction.ui.theme.FrictionTheme
+import com.waleedahmedja.friction.ui.screens.*
+import com.waleedahmedja.friction.ui.theme.FrictionAppTheme
 import com.waleedahmedja.friction.viewmodel.FrictionViewModel
+import com.waleedahmedja.friction.viewmodel.PostTapDestination
 
-class MainActivity : ComponentActivity() {
+// FragmentActivity is the correct superclass here.
+// It is the parent of ComponentActivity and provides everything we need.
+// Declaring it explicitly means `this` has static type FragmentActivity,
+// which satisfies FrictionApp's `activity: FragmentActivity` parameter
+// without any cast.
+class MainActivity : FragmentActivity() {
 
     private val vm: FrictionViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         setContent {
-            FrictionTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color    = Black
-                ) {
-                    val nav       = rememberNavController()
-                    val isStandby by vm.isStandby.collectAsStateWithLifecycle()
-
-                    LaunchedEffect(isStandby) {
-                        requestedOrientation = if (isStandby)
-                            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                        else
-                            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                    }
-
-                    NavHost(nav, startDestination = Screen.Home.route) {
-
-                        composable(Screen.Home.route) {
-                            LaunchedEffect(Unit) {
-                                requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                vm.exitStandby()
-                            }
-                            HomeScreen(vm) {
-                                nav.navigate(Screen.Lock.route) {
-                                    launchSingleTop = true
-                                }
-                            }
-                        }
-
-                        composable(Screen.Lock.route) {
-                            LockScreen(
-                                vm = vm,
-                                onExit = {
-                                    nav.navigate(Screen.TapChallenge.route) {
-                                        launchSingleTop = true
-                                    }
-                                },
-                                onExpire = {
-                                    requestedOrientation =
-                                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                    vm.exitStandby()
-                                    nav.navigate(Screen.Completion.route) {
-                                        popUpTo(Screen.Home.route)
-                                        launchSingleTop = true
-                                    }
-                                }
-                            )
-                        }
-
-                        composable(Screen.TapChallenge.route) {
-                            TapChallengeScreen(
-                                vm = vm,
-                                onDone = {
-                                    requestedOrientation =
-                                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                    nav.navigate(Screen.Reflection.route) {
-                                        launchSingleTop = true
-                                    }
-                                },
-                                onBack = {
-                                    nav.navigate(Screen.Lock.route) {
-                                        popUpTo(Screen.Lock.route) { inclusive = true }
-                                        launchSingleTop = true
-                                    }
-                                }
-                            )
-                        }
-
-                        composable(Screen.Reflection.route) {
-                            LaunchedEffect(Unit) {
-                                requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                            }
-                            ReflectionScreen(vm) {
-                                nav.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.Home.route) { inclusive = true }
-                                    launchSingleTop = true
-                                }
-                            }
-                        }
-
-                        composable(Screen.Completion.route) {
-                            LaunchedEffect(Unit) {
-                                requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                            }
-                            CompletionScreen(vm) {
-                                nav.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.Home.route) { inclusive = true }
-                                    launchSingleTop = true
-                                }
-                            }
-                        }
-                    }
-                }
+            FrictionAppTheme {
+                // Pass `this` (the actual FragmentActivity) directly into the
+                // composition tree. This avoids walking the ContextWrapper chain
+                // which fails on some OEM devices (e.g. Transsion) because their
+                // Navigation implementation doesn't propagate the Activity context.
+                FrictionApp(vm = vm, activity = this)
             }
         }
     }
+}
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) hideSystemBars()
+@Composable
+private fun FrictionApp(
+    vm      : FrictionViewModel,
+    activity: FragmentActivity          // the real MainActivity, passed directly
+) {
+    val nav        = rememberNavController()
+    val postDest   by vm.postTapDestination.collectAsStateWithLifecycle()
+    val completion by vm.completion        .collectAsStateWithLifecycle()
+
+    // Session complete → Completion screen
+    LaunchedEffect(completion.visible) {
+        if (completion.visible) {
+            nav.navigate(Screen.Completion.route) { popUpTo(0) { inclusive = true } }
+        }
     }
 
-    private fun hideSystemBars() {
-        val controller = WindowInsetsControllerCompat(window, window.decorView)
-        controller.hide(WindowInsetsCompat.Type.systemBars())
-        controller.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    // Post-tap routing
+    LaunchedEffect(postDest) {
+        when (postDest) {
+            PostTapDestination.REFLECTION -> {
+                vm.clearPostTapDestination()
+                nav.navigate(Screen.Reflection.route) {
+                    popUpTo(Screen.TapChallenge.route) { inclusive = true }
+                }
+            }
+            PostTapDestination.HOME -> {
+                vm.clearPostTapDestination()
+                nav.navigate(Screen.Home.route) { popUpTo(0) { inclusive = true } }
+            }
+            PostTapDestination.NONE -> Unit
+        }
+    }
+
+    NavHost(navController = nav, startDestination = Screen.Home.route) {
+
+        composable(Screen.Home.route) {
+            FocusScreen(
+                vm             = vm,
+                activity       = activity,          // ← passed directly, no context chain
+                onTapChallenge = { nav.navigate(Screen.TapChallenge.route) },
+                onGraceCancel  = { },
+                onExpire       = { },
+                onSettings     = { nav.navigate(Screen.Settings.route) }
+            )
+        }
+
+        composable(Screen.TapChallenge.route) {
+            TapChallengeScreen(
+                vm           = vm,
+                onReflection = {
+                    nav.navigate(Screen.Reflection.route) {
+                        popUpTo(Screen.Home.route) { inclusive = false }
+                    }
+                },
+                onHome       = { nav.navigate(Screen.Home.route) { popUpTo(0) { inclusive = true } } },
+                onBack       = { nav.popBackStack() }
+            )
+        }
+
+        composable(Screen.Reflection.route) {
+            ReflectionScreen(
+                vm         = vm,
+                onContinue = { nav.navigate(Screen.Home.route) { popUpTo(0) { inclusive = true } } }
+            )
+        }
+
+        composable(Screen.Completion.route) {
+            CompletionScreen(
+                vm     = vm,
+                onHome = { nav.navigate(Screen.Home.route) { popUpTo(0) { inclusive = true } } }
+            )
+        }
+
+        composable(Screen.Settings.route) {
+            SettingsScreen(
+                vm            = vm,
+                onBack        = { nav.popBackStack() },
+                onBlockedApps = { nav.navigate(Screen.BlockedApps.route) },
+                onAbout       = { nav.navigate(Screen.About.route) }
+            )
+        }
+
+        composable(Screen.BlockedApps.route) {
+            BlockedAppsScreen(vm = vm, onBack = { nav.popBackStack() })
+        }
+
+        composable(Screen.About.route) {
+            AboutScreen(
+                vm        = vm,
+                onBack    = { nav.popBackStack() },
+                onPrivacy = { nav.navigate(Screen.Privacy.route) }
+            )
+        }
+
+        composable(Screen.Privacy.route) {
+            PrivacyPolicyScreen(onBack = { nav.popBackStack() })
+        }
     }
 }

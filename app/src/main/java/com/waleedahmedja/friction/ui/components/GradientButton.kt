@@ -1,6 +1,8 @@
-package com.waleedahmedja.friction.ui
+package com.waleedahmedja.friction.ui.components
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -12,17 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.waleedahmedja.friction.ui.theme.AccentEnd
-import com.waleedahmedja.friction.ui.theme.AccentStart
-import com.waleedahmedja.friction.ui.theme.Black
-
-val accentGradient = Brush.horizontalGradient(listOf(AccentStart, AccentEnd))
+import com.waleedahmedja.friction.ui.accentGradient
+import com.waleedahmedja.friction.ui.theme.FrictionTheme
 
 @Composable
 fun GradientButton(
@@ -31,15 +29,17 @@ fun GradientButton(
     modifier: Modifier = Modifier,
     enabled : Boolean  = true
 ) {
+    val c = FrictionTheme.c
+
     var pressed by remember { mutableStateOf(false) }
     val scale   by animateFloatAsState(
         targetValue   = if (pressed) 0.97f else 1f,
         animationSpec = tween(120, easing = FastOutSlowInEasing),
-        label         = "btn_scale"
+        label         = "btnScale"
     )
 
-    val bgBrush = if (enabled) accentGradient
-    else Brush.horizontalGradient(listOf(Color(0xFF2C2C2E), Color(0xFF2C2C2E)))
+    val bg: Brush = if (enabled) accentGradient
+                    else Brush.horizontalGradient(listOf(c.surface2, c.surface2))
 
     Box(
         modifier = modifier
@@ -47,18 +47,12 @@ fun GradientButton(
             .fillMaxWidth()
             .height(56.dp)
             .clip(RoundedCornerShape(28.dp))
-            .background(bgBrush)
+            .background(bg)
             .pointerInput(enabled) {
-                if (enabled) {
-                    detectTapGestures(
-                        onPress = {
-                            pressed = true
-                            tryAwaitRelease()
-                            pressed = false
-                        },
-                        onTap = { onClick() }
-                    )
-                }
+                if (enabled) detectTapGestures(
+                    onPress = { pressed = true; tryAwaitRelease(); pressed = false },
+                    onTap   = { onClick() }
+                )
             },
         contentAlignment = Alignment.Center
     ) {
@@ -67,7 +61,7 @@ fun GradientButton(
             style = TextStyle(
                 fontSize   = 17.sp,
                 fontWeight = FontWeight.SemiBold,
-                color      = if (enabled) Black else Color(0xFF636366)
+                color      = if (enabled) c.btnText else c.textHint
             )
         )
     }
