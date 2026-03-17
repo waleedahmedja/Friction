@@ -199,7 +199,7 @@ Friction has a strong design philosophy. Contributions that add complexity witho
 
 ## License
 
-[Friction License v1.0](LICENSE) — free to use, study, modify, distribute. Attribution required. Public changes stay public.
+[Friction License v2.0](LICENSE.md) — free to use, study, modify, distribute. Attribution required. Public changes stay public.
 
 ---
 
