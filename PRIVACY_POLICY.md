@@ -112,3 +112,6 @@ https://github.com/waleedahmedja/Score247
 ---
 
 *Friction is built on transparency, discipline, and user control. Your data is yours.*
+
+— **waleedahmedja**
+
