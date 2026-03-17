@@ -1,10 +1,10 @@
-// Root-level build file.
-// Module-level build config lives in app/build.gradle.kts.
-// We declare plugins here with apply false so the version catalog controls
-// all versions from a single place (gradle/libs.versions.toml).
+// Root build file — plugin declarations only.
+// apply false means plugins are declared here but NOT applied to the root project.
+// They get applied in app/build.gradle.kts where they're actually needed.
 
 plugins {
     alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.compose)      apply false
     alias(libs.plugins.kotlin.android)      apply false
+    // Kotlin 2.0+ Compose compiler plugin — must be declared here AND in app module
+    alias(libs.plugins.kotlin.compose)      apply false
 }
