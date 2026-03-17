@@ -203,10 +203,4 @@ Friction has a strong design philosophy. Contributions that add complexity witho
 
 ---
 
-<div align="center">
-
-*Friction is calm. Friction is firm. Friction respects your decision to focus.*
-
-**— waleedahmedja**
-
-</div>
+— **waleedahmedja**
