@@ -1,35 +1,33 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Friction — app/build.gradle.kts
-//
-// AGP 8.7.3 · Kotlin 2.0.21 · Compose BOM 2024.12.01
-// compileSdk / targetSdk = 35  ·  minSdk = 24 (covers ~97% of Android devices)
+// AGP 8.7.3 · Kotlin 2.0.21 · compileSdk 35 · minSdk 24
 // ─────────────────────────────────────────────────────────────────────────────
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    // Kotlin 2.0+ requires the Compose compiler plugin declared EXPLICITLY here.
-    // Do NOT use composeOptions{} block — that's the old Kotlin 1.x way.
+    // Kotlin 2.0 requires this explicit Compose compiler plugin.
+    // Do NOT use the old composeOptions { kotlinCompilerExtensionVersion } block.
     alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace   = "com.waleedahmedja.friction"
-    compileSdk  = 35
+    namespace  = "com.waleedahmedja.friction"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId          = "com.waleedahmedja.friction"
-        minSdk                 = 24
-        targetSdk              = 35
-        versionCode            = 1
-        versionName            = "1.0"
+        applicationId             = "com.waleedahmedja.friction"
+        minSdk                    = 24
+        targetSdk                 = 35
+        versionCode               = 1
+        versionName               = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            // Enable minification for release — removes dead code, shrinks APK
-            isMinifyEnabled = true
+            // Minify + resource shrink for a tight production APK
+            isMinifyEnabled   = true
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -37,7 +35,6 @@ android {
             )
         }
         debug {
-            // Keep debug builds fast and unobfuscated
             isMinifyEnabled = false
         }
     }
@@ -53,20 +50,21 @@ android {
 
     buildFeatures {
         compose     = true
-        buildConfig = true   // needed if we read BuildConfig.VERSION_NAME in AboutScreen
+        // Enables BuildConfig.VERSION_NAME used in AboutScreen
+        buildConfig = true
     }
 }
 
 dependencies {
 
-    // ── Core Android ──────────────────────────────────────────────────────────
+    // ── Android core ──────────────────────────────────────────────────────────
     implementation(libs.androidx.core.ktx)
 
-    // AppCompat — REQUIRED because themes.xml uses Theme.AppCompat.NoActionBar.
-    // Material3 theme parent causes AAPT crash on many device/AGP combinations.
+    // AppCompat is REQUIRED here because themes.xml uses Theme.AppCompat.NoActionBar.
+    // Without this, the app crashes with a resource-not-found at launch.
     implementation(libs.androidx.appcompat)
 
-    // ── Compose BOM (pins all Compose library versions together) ─────────────
+    // ── Compose BOM — all compose/* versions come from here ───────────────────
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -81,7 +79,7 @@ dependencies {
     // ── Navigation ────────────────────────────────────────────────────────────
     implementation(libs.androidx.navigation.compose)
 
-    // ── DataStore (replaces SharedPreferences — coroutine-safe, type-safe) ───
+    // ── DataStore ─────────────────────────────────────────────────────────────
     implementation(libs.androidx.datastore.preferences)
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
@@ -92,10 +90,10 @@ dependencies {
     // ── Activity ──────────────────────────────────────────────────────────────
     implementation(libs.androidx.activity.compose)
 
-    // ── Biometric (face/fingerprint gate before tap challenge) ────────────────
+    // ── Biometric ─────────────────────────────────────────────────────────────
     implementation(libs.androidx.biometric)
 
-    // ── Testing ───────────────────────────────────────────────────────────────
+    // ── Tests ─────────────────────────────────────────────────────────────────
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
