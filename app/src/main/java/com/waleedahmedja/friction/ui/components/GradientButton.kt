@@ -30,16 +30,14 @@ fun GradientButton(
     enabled : Boolean  = true
 ) {
     val c = FrictionTheme.c
-
     var pressed by remember { mutableStateOf(false) }
-    val scale   by animateFloatAsState(
+    val scale by animateFloatAsState(
         targetValue   = if (pressed) 0.97f else 1f,
         animationSpec = tween(120, easing = FastOutSlowInEasing),
         label         = "btnScale"
     )
-
     val bg: Brush = if (enabled) accentGradient
-                    else Brush.horizontalGradient(listOf(c.surface2, c.surface2))
+    else Brush.horizontalGradient(listOf(c.surface2, c.surface2))
 
     Box(
         modifier = modifier

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 private val Context.dataStore: DataStore<Preferences>
-    by preferencesDataStore(name = "friction_prefs")
+        by preferencesDataStore(name = "friction_prefs")
 
 class DataStoreManager(private val ctx: Context) {
 

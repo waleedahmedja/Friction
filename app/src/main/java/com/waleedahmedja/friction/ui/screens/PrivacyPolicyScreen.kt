@@ -20,7 +20,6 @@ import com.waleedahmedja.friction.ui.theme.FrictionTheme
 @Composable
 fun PrivacyPolicyScreen(onBack: () -> Unit) {
     val c = FrictionTheme.c
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -30,10 +29,12 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
     ) {
         Spacer(Modifier.height(56.dp))
 
-        // Top bar
+        // Header
         Box(modifier = Modifier.fillMaxWidth()) {
             Box(
-                modifier = Modifier.size(44.dp).align(Alignment.CenterStart)
+                modifier = Modifier
+                    .size(44.dp)
+                    .align(Alignment.CenterStart)
                     .pointerInput(Unit) { detectTapGestures { onBack() } },
                 contentAlignment = Alignment.Center
             ) {
@@ -42,78 +43,59 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
             Text(
                 "PRIVACY POLICY",
                 style = TextStyle(
-                    fontSize = 11.sp, fontWeight = FontWeight.Medium,
-                    color = c.textHint, letterSpacing = 2.sp
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = c.textHint,
+                    letterSpacing = 2.sp
                 ),
                 modifier = Modifier.align(Alignment.Center)
             )
         }
 
         Spacer(Modifier.height(40.dp))
+        Text("Last updated: March 2026", style = TextStyle(fontSize = 12.sp, color = c.textHint))
+        Spacer(Modifier.height(24.dp))
 
-        Text("Effective January 2026",
-            style = TextStyle(fontSize = 12.sp, color = c.textHint))
-
+        // Introduction / Short Version
+        Text(
+            "Friction is a commitment enforcement system designed for voluntary personal use. Everything stays on your device.",
+            style = TextStyle(fontSize = 14.sp, color = c.text, fontWeight = FontWeight.Medium, lineHeight = 20.sp)
+        )
         Spacer(Modifier.height(32.dp))
 
-        PolicySection(c, "1. Data Collection",
-            "Friction collects no personal data. The app operates entirely on your device. " +
-            "No usage analytics, crash reports, or behavioural data are collected or transmitted."
-        )
-        PolicySection(c, "2. Accessibility Service",
-            "The Accessibility Service monitors which app is in the foreground. " +
-            "This information is used solely to enforce your focus session by triggering the tap challenge " +
-            "when a blocked app is opened. No screen content is read. No data leaves your device."
-        )
-        PolicySection(c, "3. Device Administrator",
-            "When Hard Commitment Mode is enabled, Friction registers as a Device Administrator. " +
-            "This prevents the app from being uninstalled during an active session. " +
-            "Administrator rights are removed automatically when the session ends, " +
-            "or can be revoked manually at any time via Android Settings."
-        )
-        PolicySection(c, "4. Biometric Authentication",
-            "If biometric verification is enabled, authentication is handled entirely by Android's " +
-            "BiometricPrompt API. Friction never accesses, stores, or transmits biometric data."
-        )
-        PolicySection(c, "5. Local Storage",
-            "Session settings, duration preferences, and blocked app lists are stored locally " +
-            "using Android DataStore. This data never leaves your device and is deleted when you " +
-            "reset the app or uninstall it."
-        )
-        PolicySection(c, "6. Third-Party Services",
-            "Friction uses no third-party SDKs, analytics services, advertising networks, " +
-            "or cloud services of any kind."
-        )
-        PolicySection(c, "7. Ethical Use",
-            "Friction is a personal focus tool. It is not intended for use on devices you do not own, " +
-            "or to enforce restrictions on other individuals without their informed consent."
-        )
-        PolicySection(c, "8. Children's Privacy",
-            "Friction is not directed at children under 13 and does not knowingly collect " +
-            "data from minors."
-        )
-        PolicySection(c, "9. Changes to This Policy",
-            "If this policy changes, the effective date above will be updated. " +
-            "Continued use of the app after changes constitutes acceptance."
-        )
-        PolicySection(c, "10. Contact",
-            "Questions about this policy: waleedahmedja@gmail.com"
-        )
+        // Policy Sections
+        PS(c, "1. Data Collection", "Friction does not collect, store, transmit, or sell any personal data. All focus session data (duration, blocked apps, settings) is stored locally on your device using Android DataStore. Nothing leaves your device.")
+
+        PS(c, "2. Accessibility Service", "Used solely to detect foreground applications to enforce blocks. Friction does not read screen content, record keystrokes, or track browsing behavior. 'canRetrieveWindowContent' is explicitly set to false.")
+
+        PS(c, "3. Device Administrator", "When Hard Commitment Mode is enabled, Friction uses Device Admin permissions strictly to prevent uninstallation mid-session. Rights are released automatically when the session ends.")
+
+        PS(c, "4. Biometric Authentication", "Verification is handled entirely by Android's system-level secure APIs (BiometricPrompt). Friction does not access, store, or transmit any biometric information.")
+
+        PS(c, "5. Local Storage", "All app data is stored locally via Android DataStore. Uninstalling the app removes all of this data permanently.")
+
+        PS(c, "6. Third-Party Services", "Friction uses none. No analytics, advertising SDKs, or tracking frameworks. The app operates entirely offline.")
+
+        PS(c, "7. Children's Privacy", "Friction does not knowingly collect data from anyone. Since no personal data is collected from any user, no special processing applies.")
+
+        PS(c, "8. Ethical Use", "Friction is for voluntary self-discipline. It must not be used to monitor or control another person's device without their informed consent.")
+
+        PS(c, "9. Changes", "This policy may be updated to reflect new features. Significant changes will be noted in the release notes.")
+
+        PS(c, "10. Contact", "If you have questions, open a GitHub Issue at: github.com/waleedahmedja/Score247")
 
         Spacer(Modifier.height(48.dp))
-
         Text(
-            "Your data remains yours.",
-            style    = TextStyle(fontSize = 13.sp, color = c.textHint, fontWeight = FontWeight.Light),
+            "Friction is built on transparency and discipline. Your data is yours.",
+            style = TextStyle(fontSize = 13.sp, color = c.textHint, fontWeight = FontWeight.Light),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-
         Spacer(Modifier.height(64.dp))
     }
 }
 
 @Composable
-private fun PolicySection(c: FrictionColors, heading: String, body: String) {
+private fun PS(c: FrictionColors, heading: String, body: String) {
     Text(heading, style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = c.text))
     Spacer(Modifier.height(8.dp))
     Text(body, style = TextStyle(fontSize = 14.sp, color = c.textSub, lineHeight = 22.sp))

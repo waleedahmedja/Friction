@@ -7,8 +7,14 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 
-// ── Stable colour token bag ────────────────────────────────────────────────────
-// @Stable lets Compose skip recomposition if nothing changed.
+// ─────────────────────────────────────────────────────────────────────────────
+// FrictionColors — our own design token bag.
+//
+// @Stable tells the Compose compiler that none of its properties change their
+// equals contract unexpectedly, so any composable that reads from this object
+// can be skipped during recomposition when nothing inside has changed.
+// ─────────────────────────────────────────────────────────────────────────────
+
 @Stable
 data class FrictionColors(
     val bg      : Color,
@@ -24,8 +30,8 @@ data class FrictionColors(
     val isDark  : Boolean
 )
 
-// ── Singleton token sets ───────────────────────────────────────────────────────
-private val Dark = FrictionColors(
+// ── Singleton instances — created once at startup, never re-allocated ─────────
+private val DarkColors = FrictionColors(
     bg       = Black,
     surface  = Surface11,
     surface2 = Surface22,
@@ -39,7 +45,7 @@ private val Dark = FrictionColors(
     isDark   = true
 )
 
-private val Light = FrictionColors(
+private val LightColors = FrictionColors(
     bg       = LightBg,
     surface  = LightSurface,
     surface2 = LightSurf2,
@@ -53,8 +59,11 @@ private val Light = FrictionColors(
     isDark   = false
 )
 
-// ── CompositionLocal ───────────────────────────────────────────────────────────
-private val LocalFrictionColors = staticCompositionLocalOf { Dark }
+// ── CompositionLocal — access anywhere via FrictionTheme.c ───────────────────
+// staticCompositionLocalOf is faster than compositionLocalOf for values that
+// change rarely (only on system dark/light mode toggle).
+
+private val LocalFrictionColors = staticCompositionLocalOf<FrictionColors> { DarkColors }
 
 object FrictionTheme {
     val c: FrictionColors
@@ -62,10 +71,10 @@ object FrictionTheme {
         get() = LocalFrictionColors.current
 }
 
-// ── Material color schemes (minimal — we use FrictionColors for custom UI) ────
+// ── Material3 color schemes — kept minimal, FrictionColors drives our UI ──────
 private val DarkScheme = darkColorScheme(
     primary   = AccentYellow,
-    background= Black,
+    background = Black,
     surface   = Surface11,
     onPrimary = BtnText,
     onSurface = TextPrimary,
@@ -74,21 +83,21 @@ private val DarkScheme = darkColorScheme(
 
 private val LightScheme = lightColorScheme(
     primary   = AccentYellow,
-    background= LightBg,
+    background = LightBg,
     surface   = LightSurface,
     onPrimary = LightBtnText,
     onSurface = LightText,
     error     = Danger
 )
 
-// ── Theme entry point ─────────────────────────────────────────────────────────
+// ── Entry point — call this in MainActivity.setContent{} ─────────────────────
 @Composable
 fun FrictionAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content  : @Composable () -> Unit
 ) {
-    val colors      = if (darkTheme) Dark else Light
-    val colorScheme = if (darkTheme) DarkScheme else LightScheme
+    val colors      = if (darkTheme) DarkColors else LightColors
+    val colorScheme = if (darkTheme) DarkScheme  else LightScheme
 
     CompositionLocalProvider(LocalFrictionColors provides colors) {
         MaterialTheme(

@@ -103,7 +103,7 @@ fun StandbyScreen(
     val remM   = ((remainMs % 3_600_000L) / 60_000L).toInt()
     val remS   = ((remainMs % 60_000L) / 1_000L).toInt()
     val remStr = if (remH > 0) "%d:%02d:%02d".format(remH, remM, remS)
-                 else          "%02d:%02d".format(remM, remS)
+    else          "%02d:%02d".format(remM, remS)
 
     // OLED burn-in prevention — micro pixel drift every 30 s
     var driftX by remember { mutableFloatStateOf(0f) }

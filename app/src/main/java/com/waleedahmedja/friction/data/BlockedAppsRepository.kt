@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private val Context.blockedAppsStore: DataStore<Preferences>
-    by preferencesDataStore(name = "friction_blocked_apps")
+        by preferencesDataStore(name = "friction_blocked_apps")
 
 class BlockedAppsRepository(private val ctx: Context) {
 

@@ -37,6 +37,7 @@ class FrictionDeviceAdminReceiver : DeviceAdminReceiver() {
                     DevicePolicyManager.EXTRA_ADD_EXPLANATION,
                     "Required for Hard Commitment Mode. Removed automatically when your session ends."
                 )
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
 
         fun revokeAdmin(ctx: Context) {

@@ -36,14 +36,14 @@ data class LockState(
 ) {
     val progressFraction: Float
         get() = if (totalDurationMs <= 0L) 0f
-                else (1f - remainingMs.toFloat() / totalDurationMs).coerceIn(0f, 1f)
+        else (1f - remainingMs.toFloat() / totalDurationMs).coerceIn(0f, 1f)
 
     val durationMs: Long get() = totalDurationMs
     val endsAtMs  : Long get() = unlockAt
 
     val sessionEndTime: String
         get() = if (unlockAt == 0L) ""
-                else SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date(unlockAt))
+        else SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date(unlockAt))
 }
 
 data class TapState(

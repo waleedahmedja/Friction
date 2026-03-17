@@ -59,7 +59,7 @@ fun BlockedAppsScreen(
         if (query.isBlank()) allApps
         else allApps.filter { app ->
             app.label.contains(query, ignoreCase = true) ||
-            app.packageName.contains(query, ignoreCase = true)
+                    app.packageName.contains(query, ignoreCase = true)
         }
     }
 
@@ -205,7 +205,7 @@ fun BlockedAppsScreen(
                 apps         = blockedApps,
                 selectedPkgs = allowed,
                 emptyMsg     = if (blocked.isEmpty()) "Block some apps first to add them here."
-                               else "No blocked apps match \"$query\"",
+                else "No blocked apps match \"$query\"",
                 isBlockList  = false,
                 onToggle     = { vm.toggleAllowed(it) }
             )

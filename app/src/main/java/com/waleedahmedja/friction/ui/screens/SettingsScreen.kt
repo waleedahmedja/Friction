@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -57,9 +58,7 @@ fun SettingsScreen(
     val blockedCount     by vm.blockedPackages   .collectAsStateWithLifecycle()
     val allowedCount     by vm.allowedPackages   .collectAsStateWithLifecycle()
 
-    val settingsLocked = lock.isActive && lockSettings
-
-    // Read live permission status once per composition
+    val settingsLocked  = lock.isActive && lockSettings
     val accessibilityOn = remember { vm.isAccessibilityEnabled() }
     val adminOn         = remember { FrictionDeviceAdminReceiver.isAdminActive(context) }
 
@@ -67,7 +66,6 @@ fun SettingsScreen(
     var showResetConfirm  by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize().background(c.bg)) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -87,20 +85,18 @@ fun SettingsScreen(
                 }
                 Text(
                     "SETTINGS",
-                    style    = TextStyle(
-                        fontSize      = 11.sp, fontWeight   = FontWeight.Medium,
-                        color         = c.textHint,         letterSpacing = 2.sp
+                    style = TextStyle(
+                        fontSize = 11.sp, fontWeight = FontWeight.Medium,
+                        color = c.textHint, letterSpacing = 2.sp
                     ),
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
 
-            // Locked banner
             if (settingsLocked) {
                 Spacer(Modifier.height(20.dp))
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                         .clip(RoundedCornerShape(12.dp))
                         .background(c.surface)
                         .padding(horizontal = 16.dp, vertical = 12.dp)
@@ -116,17 +112,17 @@ fun SettingsScreen(
             Spacer(Modifier.height(36.dp))
             SHeader(c, "PERMISSIONS")
             Spacer(Modifier.height(12.dp))
-            SCard(c, locked = false) {
+            SCard(c, false) {
                 SRow(
-                    c        = c,
-                    title    = "Accessibility Service",
+                    c       = c,
+                    title   = "Accessibility Service",
                     subtitle = if (accessibilityOn) "Active — app blocking enabled"
-                               else "Required — tap to enable in system settings",
-                    value    = if (accessibilityOn) "Active" else "Required",
+                    else "Required — tap to enable",
+                    value      = if (accessibilityOn) "Active" else "Required",
                     valueColor = if (accessibilityOn) AccentStart else Danger,
-                    chevron  = !accessibilityOn,
-                    locked   = false,
-                    onClick  = if (!accessibilityOn) {{
+                    chevron    = !accessibilityOn,
+                    locked     = false,
+                    onClick    = if (!accessibilityOn) {{
                         context.startActivity(
                             Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -135,19 +131,25 @@ fun SettingsScreen(
                 )
                 SDivider(c)
                 SRow(
-                    c        = c,
-                    title    = "Device Admin",
+                    c       = c,
+                    title   = "Device Admin",
                     subtitle = if (adminOn) "Active — Hard Mode protection enabled"
-                               else "Inactive — required for Hard Commitment Mode",
-                    value    = if (adminOn) "Active" else "Inactive",
+                    else "Inactive — required for Hard Commitment Mode",
+                    value      = if (adminOn) "Active" else "Inactive",
                     valueColor = if (adminOn) AccentStart else c.textHint,
-                    chevron  = !adminOn,
-                    locked   = false,
-                    onClick  = if (!adminOn) {{
-                        context.startActivity(
-                            FrictionDeviceAdminReceiver.buildActivationIntent(context)
-                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        )
+                    chevron    = !adminOn,
+                    locked     = false,
+                    onClick    = if (!adminOn) {{
+                        try {
+                            context.startActivity(
+                                FrictionDeviceAdminReceiver.buildActivationIntent(context)
+                            )
+                        } catch (e: Exception) {
+                            context.startActivity(
+                                FrictionDeviceAdminReceiver.buildActivationIntent(context)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            )
+                        }
                     }} else null
                 )
             }
@@ -156,15 +158,15 @@ fun SettingsScreen(
             Spacer(Modifier.height(32.dp))
             SHeader(c, "FOCUS MODE")
             Spacer(Modifier.height(12.dp))
-            SCard(c, locked = settingsLocked) {
+            SCard(c, settingsLocked) {
                 SRow(
-                    c       = c,
-                    title   = "Commitment Mode",
+                    c        = c,
+                    title    = "Commitment Mode",
                     subtitle = if (hardMode) "Hard — cannot uninstall during session"
-                               else "Normal — standard enforcement",
-                    chevron = true,
-                    locked  = settingsLocked,
-                    onClick = { showHardModeSheet = true }
+                    else "Normal — standard enforcement",
+                    chevron  = true,
+                    locked   = settingsLocked,
+                    onClick  = { showHardModeSheet = true }
                 )
             }
 
@@ -172,8 +174,7 @@ fun SettingsScreen(
             Spacer(Modifier.height(32.dp))
             SHeader(c, "SESSION CONTROLS")
             Spacer(Modifier.height(12.dp))
-            SCard(c, locked = settingsLocked) {
-
+            SCard(c, settingsLocked) {
                 // Tap difficulty
                 Column(
                     modifier = Modifier
@@ -187,15 +188,11 @@ fun SettingsScreen(
                         TapDifficulty.entries.forEachIndexed { idx, diff ->
                             val sel = tapDifficulty == idx
                             Box(
-                                modifier = Modifier
-                                    .weight(1f)
+                                modifier = Modifier.weight(1f)
                                     .clip(RoundedCornerShape(10.dp))
-                                    .background(
-                                        if (sel) AccentStart.copy(alpha = 0.15f) else c.surface2
-                                    )
+                                    .background(if (sel) AccentStart.copy(alpha = 0.15f) else c.surface2)
                                     .pointerInput(idx, settingsLocked) {
-                                        if (!settingsLocked)
-                                            detectTapGestures { vm.setTapDifficulty(idx) }
+                                        if (!settingsLocked) detectTapGestures { vm.setTapDifficulty(idx) }
                                     }
                                     .padding(vertical = 10.dp),
                                 contentAlignment = Alignment.Center
@@ -212,9 +209,7 @@ fun SettingsScreen(
                         }
                     }
                 }
-
                 SDivider(c)
-
                 // Grace period
                 Column(
                     modifier = Modifier
@@ -222,9 +217,9 @@ fun SettingsScreen(
                         .alpha(if (settingsLocked) 0.4f else 1f)
                 ) {
                     Row(
-                        modifier              = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment     = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("Grace Period", style = TextStyle(fontSize = 16.sp, color = c.text))
                         Text(
@@ -244,27 +239,21 @@ fun SettingsScreen(
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(8.dp))
-                                    .background(
-                                        if (sel) AccentStart.copy(alpha = 0.15f) else c.surface2
-                                    )
+                                    .background(if (sel) AccentStart.copy(alpha = 0.15f) else c.surface2)
                                     .pointerInput(secs, settingsLocked) {
-                                        if (!settingsLocked)
-                                            detectTapGestures { vm.setGracePeriod(secs) }
+                                        if (!settingsLocked) detectTapGestures { vm.setGracePeriod(secs) }
                                     }
                                     .padding(horizontal = 14.dp, vertical = 8.dp)
                             ) {
                                 Text(
                                     if (secs == 0) "Off" else "${secs}s",
-                                    style = TextStyle(
-                                        fontSize = 13.sp,
-                                        color    = if (sel) AccentStart else c.textHint
-                                    )
+                                    style = TextStyle(fontSize = 13.sp,
+                                        color = if (sel) AccentStart else c.textHint)
                                 )
                             }
                         }
                     }
                 }
-
                 SDivider(c)
                 SToggle(c, "Require Biometric to End Early",
                     "Face or fingerprint before tap challenge.",
@@ -279,31 +268,27 @@ fun SettingsScreen(
             Spacer(Modifier.height(32.dp))
             SHeader(c, "BLOCKING")
             Spacer(Modifier.height(12.dp))
-            SCard(c, locked = false) {
+            SCard(c, false) {
                 SRow(
-                    c       = c,
-                    title   = "Blocked Apps",
+                    c        = c,
+                    title    = "Blocked Apps",
                     subtitle = when {
-                        blockedCount.isEmpty() -> "No apps blocked"
-                        blockedCount.size == 1 -> "1 app blocked"
-                        else                   -> "${blockedCount.size} apps blocked"
+                        blockedCount.isEmpty()  -> "No apps blocked"
+                        blockedCount.size == 1  -> "1 app blocked"
+                        else                    -> "${blockedCount.size} apps blocked"
                     },
-                    chevron = true,
-                    locked  = false,
-                    onClick = { onBlockedApps() }
+                    chevron = true, locked = false, onClick = { onBlockedApps() }
                 )
                 SDivider(c)
                 SRow(
-                    c       = c,
-                    title   = "Emergency Allow List",
+                    c        = c,
+                    title    = "Emergency Allow List",
                     subtitle = when {
-                        allowedCount.isEmpty() -> "No exceptions"
-                        allowedCount.size == 1 -> "1 exception"
-                        else                   -> "${allowedCount.size} exceptions"
+                        allowedCount.isEmpty()  -> "No exceptions"
+                        allowedCount.size == 1  -> "1 exception"
+                        else                    -> "${allowedCount.size} exceptions"
                     },
-                    chevron = true,
-                    locked  = false,
-                    onClick = { onBlockedApps() }
+                    chevron = true, locked = false, onClick = { onBlockedApps() }
                 )
             }
 
@@ -311,17 +296,17 @@ fun SettingsScreen(
             Spacer(Modifier.height(32.dp))
             SHeader(c, "DISPLAY")
             Spacer(Modifier.height(12.dp))
-            SCard(c, locked = false) {
+            SCard(c, false) {
                 SToggle(c, "Standby Mode",
                     "Minimal black clock during a session.",
                     standbyMode, false, vm::setStandbyMode)
                 SDivider(c)
                 SToggle(c, "Ambient Mode",
-                    "OLED-safe dim display after 90 s of inactivity.",
+                    "OLED-safe dim display after 90s of inactivity.",
                     ambientMode, false, vm::setAmbientMode)
                 SDivider(c)
                 SToggle(c, "Haptic Feedback",
-                    "Vibration on wheel scroll and tap challenge.",
+                    "Subtle vibration on wheel scroll and tap challenge.",
                     hapticEnabled, false, vm::setHapticEnabled)
             }
 
@@ -329,7 +314,7 @@ fun SettingsScreen(
             Spacer(Modifier.height(32.dp))
             SHeader(c, "SECURITY")
             Spacer(Modifier.height(12.dp))
-            SCard(c, locked = false) {
+            SCard(c, false) {
                 SToggle(c, "Lock Settings During Session",
                     "Prevent changing settings while a session is active.",
                     lockSettings, false, vm::setLockSettingsDuring)
@@ -339,20 +324,14 @@ fun SettingsScreen(
             Spacer(Modifier.height(32.dp))
             SHeader(c, "ABOUT")
             Spacer(Modifier.height(12.dp))
-            SCard(c, locked = false) {
-                SRow(
-                    c       = c,
-                    title   = "About Friction",
-                    subtitle = "Version, privacy policy, open source",
-                    chevron = true,
-                    locked  = false,
-                    onClick = { onAbout() }
-                )
+            SCard(c, false) {
+                SRow(c, "About Friction", "Version, Privacy Policy, Open Source",
+                    chevron = true, locked = false, onClick = { onAbout() })
                 SDivider(c)
                 SRow(
                     c          = c,
                     title      = "Reset All Data",
-                    subtitle   = "Clears all settings, session data, and blocked apps.",
+                    subtitle   = "Clears all Settings, Session Data, and Blocked Apps.",
                     titleColor = if (settingsLocked) c.textHint else Danger,
                     locked     = settingsLocked,
                     onClick    = if (!settingsLocked) {{ showResetConfirm = true }} else null
@@ -362,7 +341,6 @@ fun SettingsScreen(
             Spacer(Modifier.height(64.dp))
         }
 
-        // Hard Mode sheet
         if (showHardModeSheet) {
             HardModeSheet(
                 c            = c,
@@ -374,7 +352,6 @@ fun SettingsScreen(
             )
         }
 
-        // Reset confirmation sheet
         if (showResetConfirm) {
             ResetSheet(
                 c         = c,
@@ -385,7 +362,7 @@ fun SettingsScreen(
     }
 }
 
-// ── Bottom sheets ─────────────────────────────────────────────────────────────
+// ── Sheets ─────────────────────────────────────────────────────────────────────
 
 @Composable
 private fun HardModeSheet(
@@ -397,19 +374,17 @@ private fun HardModeSheet(
     onDismiss   : () -> Unit
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
             .background(Color.Black.copy(alpha = if (c.isDark) 0.92f else 0.55f))
             .pointerInput(Unit) { detectTapGestures { onDismiss() } }
     ) {
         Column(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
+                .align(Alignment.BottomCenter).fillMaxWidth()
                 .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
                 .background(c.surface)
                 .padding(horizontal = 24.dp, vertical = 36.dp)
-                .pointerInput(Unit) { detectTapGestures { /* consume */ } },
+                .pointerInput(Unit) { detectTapGestures { } },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -417,64 +392,53 @@ private fun HardModeSheet(
                 style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = c.text)
             )
             Spacer(Modifier.height(16.dp))
-
             if (!isHard) {
                 listOf(
                     "Cannot uninstall Friction during a session",
                     "Settings locked for the full duration",
                     "Only the tap challenge can end it"
                 ).forEach { line ->
-                    Row(
-                        modifier          = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.Top
-                    ) {
+                    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.Top) {
                         Text("·  ", style = TextStyle(fontSize = 14.sp, color = c.textHint))
-                        Text(line, style = TextStyle(fontSize = 14.sp, color = c.textHint))
+                        Text(line,  style = TextStyle(fontSize = 14.sp, color = c.textHint))
                     }
                 }
                 Spacer(Modifier.height(8.dp))
                 Text(
                     "This is a voluntary commitment. You chose it.",
-                    style     = TextStyle(fontSize = 13.sp, color = c.textHint.copy(alpha = 0.6f)),
+                    style = TextStyle(fontSize = 13.sp, color = c.textHint.copy(alpha = 0.6f)),
                     textAlign = TextAlign.Center
                 )
             } else {
                 Text(
                     "Switching to Normal Mode removes uninstall protection immediately.",
-                    style     = TextStyle(fontSize = 14.sp, color = c.textSub),
+                    style = TextStyle(fontSize = 14.sp, color = c.textSub),
                     textAlign = TextAlign.Center
                 )
             }
-
             Spacer(Modifier.height(32.dp))
-
             if (locked) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth().height(54.dp)
-                        .clip(RoundedCornerShape(28.dp))
-                        .background(c.surface2),
+                    modifier = Modifier.fillMaxWidth().height(54.dp)
+                        .clip(RoundedCornerShape(28.dp)).background(c.surface2),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         "Cannot change mode during an active session",
-                        style     = TextStyle(fontSize = 14.sp, color = c.textHint),
+                        style = TextStyle(fontSize = 14.sp, color = c.textHint),
                         textAlign = TextAlign.Center
                     )
                 }
             } else {
                 val actionBg = if (!isHard) accentGradient
-                               else androidx.compose.ui.graphics.Brush.horizontalGradient(
-                                   listOf(c.surface2, c.surface2)
-                               )
+                else Brush.horizontalGradient(listOf(c.surface2, c.surface2))
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth().height(54.dp)
-                        .clip(RoundedCornerShape(28.dp))
-                        .background(actionBg)
-                        .pointerInput(Unit) {
-                            detectTapGestures { if (isHard) onDeactivate() else onActivate() }
-                        },
+                    modifier = Modifier.fillMaxWidth().height(54.dp)
+                        .clip(RoundedCornerShape(28.dp)).background(actionBg)
+                        .pointerInput(Unit) { detectTapGestures {
+                            if (isHard) onDeactivate() else onActivate()
+                        }},
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -486,13 +450,10 @@ private fun HardModeSheet(
                     )
                 }
             }
-
             Spacer(Modifier.height(12.dp))
             Box(
-                modifier = Modifier
-                    .fillMaxWidth().height(54.dp)
-                    .clip(RoundedCornerShape(28.dp))
-                    .background(c.surface2)
+                modifier = Modifier.fillMaxWidth().height(54.dp)
+                    .clip(RoundedCornerShape(28.dp)).background(c.surface2)
                     .pointerInput(Unit) { detectTapGestures { onDismiss() } },
                 contentAlignment = Alignment.Center
             ) {
@@ -504,58 +465,43 @@ private fun HardModeSheet(
 }
 
 @Composable
-private fun ResetSheet(
-    c        : FrictionColors,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
-) {
+private fun ResetSheet(c: FrictionColors, onConfirm: () -> Unit, onDismiss: () -> Unit) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
             .background(Color.Black.copy(alpha = if (c.isDark) 0.92f else 0.55f))
             .pointerInput(Unit) { detectTapGestures { onDismiss() } }
     ) {
         Column(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
+                .align(Alignment.BottomCenter).fillMaxWidth()
                 .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
                 .background(c.surface)
                 .padding(horizontal = 24.dp, vertical = 36.dp)
-                .pointerInput(Unit) { detectTapGestures { /* consume */ } },
+                .pointerInput(Unit) { detectTapGestures { } },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                "Reset All Data?",
-                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = c.text)
-            )
+            Text("Reset All Data?",
+                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = c.text))
             Spacer(Modifier.height(10.dp))
             Text(
                 "Clears all settings, blocked apps, and session history. Cannot be undone.",
-                style     = TextStyle(fontSize = 14.sp, color = c.textSub),
+                style = TextStyle(fontSize = 14.sp, color = c.textSub),
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(32.dp))
-
             Box(
-                modifier = Modifier
-                    .fillMaxWidth().height(54.dp)
-                    .clip(RoundedCornerShape(28.dp))
-                    .background(Danger.copy(alpha = 0.15f))
+                modifier = Modifier.fillMaxWidth().height(54.dp)
+                    .clip(RoundedCornerShape(28.dp)).background(Danger.copy(alpha = 0.15f))
                     .pointerInput(Unit) { detectTapGestures { onConfirm() } },
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    "Reset Everything",
-                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Danger)
-                )
+                Text("Reset Everything",
+                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Danger))
             }
             Spacer(Modifier.height(12.dp))
             Box(
-                modifier = Modifier
-                    .fillMaxWidth().height(54.dp)
-                    .clip(RoundedCornerShape(28.dp))
-                    .background(c.surface2)
+                modifier = Modifier.fillMaxWidth().height(54.dp)
+                    .clip(RoundedCornerShape(28.dp)).background(c.surface2)
                     .pointerInput(Unit) { detectTapGestures { onDismiss() } },
                 contentAlignment = Alignment.Center
             ) {
@@ -566,29 +512,22 @@ private fun ResetSheet(
     }
 }
 
-// ── Shared primitives ─────────────────────────────────────────────────────────
+// ── Primitives ─────────────────────────────────────────────────────────────────
 
 @Composable
 private fun SHeader(c: FrictionColors, text: String) {
     Text(
         text,
-        style    = TextStyle(
-            fontSize      = 11.sp, fontWeight   = FontWeight.Medium,
-            color         = c.textHint,         letterSpacing = 1.5.sp
-        ),
+        style    = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium,
+            color = c.textHint, letterSpacing = 1.5.sp),
         modifier = Modifier.padding(start = 4.dp)
     )
 }
 
 @Composable
-private fun SCard(
-    c      : FrictionColors,
-    locked : Boolean,
-    content: @Composable ColumnScope.() -> Unit
-) {
+private fun SCard(c: FrictionColors, locked: Boolean, content: @Composable ColumnScope.() -> Unit) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(c.surface)
             .alpha(if (locked) 0.55f else 1f),
@@ -598,13 +537,8 @@ private fun SCard(
 
 @Composable
 private fun SDivider(c: FrictionColors) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp)
-            .height(0.5.dp)
-            .background(c.divider)
-    )
+    Box(modifier = Modifier.fillMaxWidth().padding(start = 16.dp)
+        .height(0.5.dp).background(c.divider))
 }
 
 @Composable
@@ -635,10 +569,8 @@ private fun SRow(
                 Text(subtitle, style = TextStyle(fontSize = 13.sp, color = c.textHint))
             }
         }
-        Row(
-            verticalAlignment     = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             if (value != null)
                 Text(value, style = TextStyle(fontSize = 14.sp, color = valueColor))
             if (chevron)
@@ -651,7 +583,7 @@ private fun SRow(
 private fun SToggle(
     c       : FrictionColors,
     title   : String,
-    subtitle: String? = null,
+    subtitle: String?  = null,
     checked : Boolean,
     locked  : Boolean,
     onToggle: (Boolean) -> Unit
@@ -673,16 +605,12 @@ private fun SToggle(
             onCheckedChange = if (!locked) onToggle else null,
             enabled         = !locked,
             colors          = SwitchDefaults.colors(
-                checkedThumbColor           = c.btnText,
-                checkedTrackColor           = AccentStart,
-                uncheckedThumbColor         = c.textSub,
-                uncheckedTrackColor         = c.surface2,
-                uncheckedBorderColor        = Color.Transparent,
-                checkedBorderColor          = Color.Transparent,
-                disabledCheckedThumbColor   = c.btnText.copy(alpha = 0.4f),
-                disabledCheckedTrackColor   = AccentStart.copy(alpha = 0.3f),
-                disabledUncheckedThumbColor = c.textSub.copy(alpha = 0.3f),
-                disabledUncheckedTrackColor = c.surface2.copy(alpha = 0.3f)
+                checkedThumbColor   = c.btnText,
+                checkedTrackColor   = AccentStart,
+                uncheckedThumbColor = c.textSub,
+                uncheckedTrackColor = c.surface2,
+                uncheckedBorderColor = Color.Transparent,
+                checkedBorderColor   = Color.Transparent
             )
         )
     }

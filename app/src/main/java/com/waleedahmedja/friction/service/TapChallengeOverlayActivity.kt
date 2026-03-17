@@ -13,6 +13,14 @@ import com.waleedahmedja.friction.ui.theme.FrictionAppTheme
 import com.waleedahmedja.friction.viewmodel.FrictionViewModel
 import com.waleedahmedja.friction.viewmodel.PostTapDestination
 
+/**
+ * Full-screen activity that overlays the blocked app.
+ * Launched by FrictionAccessibilityService when it detects a blocked package
+ * in the foreground during an active focus session.
+ *
+ * Uses FrictionAppTheme — same as MainActivity. The window theme in the
+ * manifest (Theme.Friction.Overlay) only controls the window chrome.
+ */
 class TapChallengeOverlayActivity : ComponentActivity() {
 
     companion object {
@@ -25,23 +33,29 @@ class TapChallengeOverlayActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
+            // FrictionAppTheme — NOT FrictionTheme (which doesn't exist)
             FrictionAppTheme {
-                OverlayRoot(vm = vm, onDone = {
-                    // Navigate back to main app after tap challenge
-                    packageManager.getLaunchIntentForPackage(packageName)
-                        ?.apply { addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) }
-                        ?.let { startActivity(it) }
-                    finish()
-                })
+                OverlayContent(
+                    vm     = vm,
+                    onDone = {
+                        // Return to main app after tap challenge completes
+                        packageManager.getLaunchIntentForPackage(packageName)
+                            ?.apply { addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) }
+                            ?.let { startActivity(it) }
+                        finish()
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-private fun OverlayRoot(vm: FrictionViewModel, onDone: () -> Unit) {
+private fun OverlayContent(vm: FrictionViewModel, onDone: () -> Unit) {
     val postDest by vm.postTapDestination.collectAsStateWithLifecycle()
 
+    // When the tap challenge finishes, the ViewModel signals via postTapDestination.
+    // We close this overlay so the main app (MainActivity) can handle the routing.
     LaunchedEffect(postDest) {
         when (postDest) {
             PostTapDestination.REFLECTION,
@@ -55,8 +69,8 @@ private fun OverlayRoot(vm: FrictionViewModel, onDone: () -> Unit) {
 
     TapChallengeScreen(
         vm           = vm,
-        onReflection = {},
-        onHome       = {},
+        onReflection = { /* handled above */ },
+        onHome       = { /* handled above */ },
         onBack       = onDone
     )
 }

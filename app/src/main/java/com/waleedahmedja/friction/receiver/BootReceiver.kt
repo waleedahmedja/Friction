@@ -22,16 +22,8 @@ class BootReceiver : BroadcastReceiver() {
                 val ds       = DataStoreManager(context)
                 val active   = ds.lockActive.first()
                 val unlockAt = ds.unlockTime.first()
-
                 if (!active || unlockAt <= 0L) return@launch
-
-                // Session expired while device was off — clear it
-                if (System.currentTimeMillis() >= unlockAt) {
-                    ds.clearLock()
-                    return@launch
-                }
-
-                // Session still valid — relaunch app so timer restores
+                if (System.currentTimeMillis() >= unlockAt) { ds.clearLock(); return@launch }
                 context.packageManager
                     .getLaunchIntentForPackage(context.packageName)
                     ?.apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }

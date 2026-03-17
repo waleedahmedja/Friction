@@ -2,39 +2,47 @@ package com.waleedahmedja.friction.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Friction Design System — Color Tokens
+//
+// OLED-first. Every background is true black (#000000) so pixels are physically
+// off — saves battery on AMOLED and maximises contrast.
+//
+// Single accent: Apple Yellow #FFD60A — the same yellow Apple uses in iOS Focus
+// mode. Premium, legible on black, Gen Z familiar, not neon.
+// ─────────────────────────────────────────────────────────────────────────────
+
 // ── Primary accent ────────────────────────────────────────────────────────────
-// Apple Yellow — iOS Focus/Shortcuts yellow. Vibrant, Gen Z friendly, timeless.
-val AccentYellow   = Color(0xFFFFD60A)
-val AccentYellowDim = Color(0xFFFFD60A).copy(alpha = 0.15f)
+val AccentYellow = Color(0xFFFFD60A)   // iOS Focus yellow
 
-// ── Legacy aliases (so existing code compiles without change) ─────────────────
-val AccentStart = AccentYellow
-val AccentEnd   = AccentYellow
+// Legacy aliases — kept for files that still reference the old gradient pair
+val AccentStart  = AccentYellow
+val AccentEnd    = AccentYellow
 
-// ── Surface palette — pure OLED dark ─────────────────────────────────────────
-// #000 is pure OLED. Cards at #111 give depth without grey.
-val Black       = Color(0xFF000000)
-val Surface11   = Color(0xFF111111)   // cards
-val Surface1A   = Color(0xFF1A1A1A)   // elevated cards
-val Surface22   = Color(0xFF222222)   // inputs, secondary surface
-val Divider     = Color(0xFF2A2A2A)
+// ── Dark mode surfaces ────────────────────────────────────────────────────────
+val Black      = Color(0xFF000000)   // true OLED black — app background
+val Surface11  = Color(0xFF111111)   // card background — barely lifted from black
+val Surface1A  = Color(0xFF1A1A1A)   // elevated cards, flip-clock faces
+val Surface22  = Color(0xFF222222)   // inputs, secondary buttons, chips
+val Divider    = Color(0xFF2A2A2A)   // hairline dividers
 
-// ── Text ──────────────────────────────────────────────────────────────────────
-val TextPrimary  = Color(0xFFF5F5F5)
-val TextSecond   = Color(0xFF999999)
-val TextHint     = Color(0xFF555555)
+// ── Dark mode text ────────────────────────────────────────────────────────────
+val TextPrimary = Color(0xFFF5F5F5)   // main labels
+val TextSecond  = Color(0xFF999999)   // supporting copy, subtitles
+val TextHint    = Color(0xFF555555)   // placeholders, inactive states
+val BtnText     = Color(0xFF000000)   // text ON the yellow button — black for contrast
 
-// ── Semantic ─────────────────────────────────────────────────────────────────
-val Danger  = Color(0xFFFF453A)   // Apple red
-val Success = Color(0xFF32D74B)   // Apple green
-val BtnText = Color(0xFF000000)   // black text on yellow button
+// ── Semantic ──────────────────────────────────────────────────────────────────
+val Danger  = Color(0xFFFF453A)   // Apple red  — destructive actions
+val Success = Color(0xFF32D74B)   // Apple green — confirmations (used sparingly)
 
-// ── Light mode (minimal — app is OLED-first) ─────────────────────────────────
-val LightBg      = Color(0xFFF2F2F7)
-val LightSurface = Color(0xFFFFFFFF)
-val LightSurf2   = Color(0xFFE5E5EA)
-val LightDivider = Color(0xFFD1D1D6)
-val LightText    = Color(0xFF1C1C1E)
-val LightTextSub = Color(0xFF6D6D72)
-val LightTextHint= Color(0xFFAEAEB2)
-val LightBtnText = Color(0xFF000000)
+// ── Light mode surfaces ───────────────────────────────────────────────────────
+// Light mode is secondary in this app but should look clean and iOS-native.
+val LightBg       = Color(0xFFF2F2F7)   // iOS grouped table background
+val LightSurface  = Color(0xFFFFFFFF)   // card white
+val LightSurf2    = Color(0xFFE5E5EA)   // secondary surface
+val LightDivider  = Color(0xFFD1D1D6)   // divider lines
+val LightText     = Color(0xFF1C1C1E)   // primary text
+val LightTextSub  = Color(0xFF6D6D72)   // secondary text
+val LightTextHint = Color(0xFFAEAEB2)   // hints
+val LightBtnText  = Color(0xFF000000)   // button text on yellow
