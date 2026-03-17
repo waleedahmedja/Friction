@@ -102,3 +102,6 @@ Open a discussion, not an issue. Issues are for confirmed bugs and accepted feat
 
 Friction respects discipline.
 Contributions should too.
+
+— **waleedahmedja**
+
