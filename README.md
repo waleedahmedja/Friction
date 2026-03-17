@@ -149,7 +149,7 @@ The UI is built around one idea: **restraint as craft**.
 
 **From Releases:**
 
-→ [github.com/waleedahmedja/Friction/releases/tag/v2.0.0](https://github.com/waleedahmedja/Friction/releases/tag/v2.0.0)
+→ [github.com/waleedahmedja/Friction/releases/tag/v2.0](https://github.com/waleedahmedja/Friction/releases/tag/v2.0)
 
 Download the `.apk`, enable "Install from unknown sources" in your device settings, install.
 
