@@ -53,7 +53,7 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
         }
 
         Spacer(Modifier.height(40.dp))
-        Text("Last updated: March 2026", style = TextStyle(fontSize = 12.sp, color = c.textHint))
+        Text("Last updated: April 2026", style = TextStyle(fontSize = 12.sp, color = c.textHint))
         Spacer(Modifier.height(24.dp))
 
         // Introduction / Short Version
@@ -82,7 +82,7 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
 
         PS(c, "9. Changes", "This policy may be updated to reflect new features. Significant changes will be noted in the release notes.")
 
-        PS(c, "10. Contact", "If you have questions, open a GitHub Issue at: github.com/waleedahmedja/Score247")
+        PS(c, "10. Contact", "If you have questions, open a GitHub Issue at: github.com/waleedahmedja/Friction")
 
         Spacer(Modifier.height(48.dp))
         Text(
